@@ -1,0 +1,164 @@
+<Project>
+  <Name>Moonshot</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Game</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Game</Name>
+        <Access>Public</Access>
+        <Location left="63" top="35" />
+        <Size width="212" height="93" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MoonshotGame</Name>
+        <Access>Public</Access>
+        <Location left="63" top="198" />
+        <Size width="212" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private EntityManager _entityManager</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntityManager</Name>
+        <Access>Public</Access>
+        <Location left="404" top="198" />
+        <Size width="375" height="220" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private List&lt;IGameEntity&gt; _gameEntities</Member>
+        <Member type="Method">public void AddEntity(IGameEntity entity)</Member>
+        <Member type="Method">public void RemoveEntity(IGameEntity entity)</Member>
+        <Member type="Method">public void Clear()</Member>
+        <Member type="Method">public void UpdateEntities(GameTime gameTime)</Member>
+        <Member type="Method">public void DrawEntities(SpriteBatch spriteBatch, GameTime gameTime)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGameEntity</Name>
+        <Access>Public</Access>
+        <Location left="884" top="198" />
+        <Size width="362" height="220" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">int DrawOrder()</Member>
+        <Member type="Method">void Update(GameTime gameTime)</Member>
+        <Member type="Method">void Draw(GameTime gameTime, SpriteBatch spriteBatch)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Player</Name>
+        <Access>Public</Access>
+        <Location left="352" top="1372" />
+        <Size width="332" height="301" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public PlayerState State { get; }</Member>
+        <Member type="Property">public Input Input { get; set; }</Member>
+        <Member type="Method">public bool powerUp()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Sprite</Name>
+        <Access>Public</Access>
+        <Location left="913" top="504" />
+        <Size width="289" height="349" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">protected Dictionary&lt;string, Animation&gt; _animations</Member>
+        <Member type="Field">protected AnimationManager _animationManager</Member>
+        <Member type="Field">protected Texture2D _texture</Member>
+        <Member type="Property">public List&lt;Sprite&gt; Children { get; set; }</Member>
+        <Member type="Property">public Color Color { get; set; }</Member>
+        <Member type="Property">public bool IsRemoved { get; set; }</Member>
+        <Member type="Property">public float Layer { get; set; }</Member>
+        <Member type="Property">public Vector2 Origin { get; set; }</Member>
+        <Member type="Property">public Vector2 Position { get; set; }</Member>
+        <Member type="Property">public Rectangle Rectangle { get; set; }</Member>
+        <Member type="Property">public float Rotation { get; set; }</Member>
+        <Member type="Property">public Matrix Transform { get; set; }</Member>
+        <Member type="Property">public int NewProperty { get; set; }</Member>
+        <Member type="Property">public Rectangle CollisionArea { get; set; }</Member>
+        <Member type="Method">public bool Intersects(Sprite sprite)</Member>
+        <Member type="Method">public object Clone()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Actor</Name>
+        <Access>Public</Access>
+        <Location left="556" top="948" />
+        <Size width="305" height="297" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public int Health { get; set; }</Member>
+        <Member type="Property">public Bullet Bullet { get; set; }</Member>
+        <Member type="Property">public float Speed { get; set; }</Member>
+        <Member type="Property">public void Shoot { get; set; }</Member>
+        <Member type="Property">public virtual void OnCollide { get; set; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Obstacle</Name>
+        <Access>Public</Access>
+        <Location left="1193" top="948" />
+        <Size width="298" height="260" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Enemy</Name>
+        <Access>Public</Access>
+        <Location left="746" top="1372" />
+        <Size width="347" height="301" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Astroid</Name>
+        <Access>Public</Access>
+        <Location left="1212" top="1372" />
+        <Size width="289" height="278" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="1" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="5" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
