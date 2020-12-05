@@ -35,36 +35,29 @@
         <Member type="Method">public void DrawEntities(SpriteBatch spriteBatch, GameTime gameTime)</Member>
         <Modifier>None</Modifier>
       </Entity>
-      <Entity type="Interface">
-        <Name>IGameEntity</Name>
-        <Access>Public</Access>
-        <Location left="884" top="198" />
-        <Size width="362" height="220" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">int DrawOrder()</Member>
-        <Member type="Method">void Update(GameTime gameTime)</Member>
-        <Member type="Method">void Draw(GameTime gameTime, SpriteBatch spriteBatch)</Member>
-      </Entity>
       <Entity type="Class">
         <Name>Player</Name>
         <Access>Public</Access>
-        <Location left="352" top="1372" />
+        <Location left="80" top="1460" />
         <Size width="332" height="301" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public PlayerState State { get; }</Member>
+        <Member type="Field">private float _shootTimer</Member>
+        <Member type="Property">public bool IsDead { get; set; }</Member>
         <Member type="Property">public Input Input { get; set; }</Member>
+        <Member type="Property">public PlayerState State { get; }</Member>
         <Member type="Method">public bool powerUp()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>Sprite</Name>
         <Access>Public</Access>
-        <Location left="913" top="504" />
-        <Size width="289" height="349" />
+        <Location left="913" top="503" />
+        <Size width="289" height="400" />
         <Collapsed>False</Collapsed>
         <Member type="Field">protected Dictionary&lt;string, Animation&gt; _animations</Member>
         <Member type="Field">protected AnimationManager _animationManager</Member>
         <Member type="Field">protected Texture2D _texture</Member>
+        <Member type="Field">public Sprite Parent</Member>
         <Member type="Property">public List&lt;Sprite&gt; Children { get; set; }</Member>
         <Member type="Property">public Color Color { get; set; }</Member>
         <Member type="Property">public bool IsRemoved { get; set; }</Member>
@@ -76,6 +69,8 @@
         <Member type="Property">public Matrix Transform { get; set; }</Member>
         <Member type="Property">public int NewProperty { get; set; }</Member>
         <Member type="Property">public Rectangle CollisionArea { get; set; }</Member>
+        <Member type="Method">public override void Update(GameTime gameTime)</Member>
+        <Member type="Method">public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)</Member>
         <Member type="Method">public bool Intersects(Sprite sprite)</Member>
         <Member type="Method">public object Clone()</Member>
         <Modifier>None</Modifier>
@@ -83,20 +78,20 @@
       <Entity type="Class">
         <Name>Actor</Name>
         <Access>Public</Access>
-        <Location left="556" top="948" />
+        <Location left="378" top="1006" />
         <Size width="305" height="297" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public int Health { get; set; }</Member>
         <Member type="Property">public Bullet Bullet { get; set; }</Member>
         <Member type="Property">public float Speed { get; set; }</Member>
-        <Member type="Property">public void Shoot { get; set; }</Member>
-        <Member type="Property">public virtual void OnCollide { get; set; }</Member>
+        <Member type="Method">public void Shoot(float speed)</Member>
+        <Member type="Method">public virtual void OnCollide(Sprite sprite)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>Obstacle</Name>
         <Access>Public</Access>
-        <Location left="1193" top="948" />
+        <Location left="1365" top="1005" />
         <Size width="298" height="260" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -104,7 +99,7 @@
       <Entity type="Class">
         <Name>Enemy</Name>
         <Access>Public</Access>
-        <Location left="746" top="1372" />
+        <Location left="608" top="1460" />
         <Size width="347" height="301" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -112,9 +107,80 @@
       <Entity type="Class">
         <Name>Astroid</Name>
         <Access>Public</Access>
-        <Location left="1212" top="1372" />
+        <Location left="1365" top="1375" />
         <Size width="289" height="278" />
         <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AnimationManager</Name>
+        <Access>Public</Access>
+        <Location left="404" top="579" />
+        <Size width="277" height="298" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Animation _animation</Member>
+        <Member type="Field">private float _timer</Member>
+        <Member type="Property">public Animation CurrentAnimation { get; set; }</Member>
+        <Member type="Property">public float Layer { get; set; }</Member>
+        <Member type="Property">public Vector2 Origin { get; set; }</Member>
+        <Member type="Property">public Vector2 Position { get; set; }</Member>
+        <Member type="Property">public float Rotation { get; set; }</Member>
+        <Member type="Property">public float Scale { get; set; }</Member>
+        <Member type="Method">public void Draw(SpriteBatch spriteBatch)</Member>
+        <Member type="Method">public void Play(Animation animation)</Member>
+        <Member type="Method">public void Stop()</Member>
+        <Member type="Method">public void Update(GameTime gameTime)</Member>
+        <Member type="Method">public object Clone()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Animation</Name>
+        <Access>Public</Access>
+        <Location left="10" top="579" />
+        <Size width="275" height="280" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public int CurrentFrame { get; set; }</Member>
+        <Member type="Property">public int FrameCount { get; private set; }</Member>
+        <Member type="Property">public int FrameHeight { get; }</Member>
+        <Member type="Property">public float FrameSpeed { get; set; }</Member>
+        <Member type="Property">public int FrameWidth { get; }</Member>
+        <Member type="Property">public bool IsLooping { get; set; }</Member>
+        <Member type="Property">public Texture2D Texture { get; set; }</Member>
+        <Member type="Method">public object Clone()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICollidable</Name>
+        <Access>Public</Access>
+        <Location left="1321" top="191" />
+        <Size width="311" height="213" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void OnCollide(Sprite sprite)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>GameEntity</Name>
+        <Access>Public</Access>
+        <Location left="897" top="179" />
+        <Size width="300" height="243" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public int DrawOrder { get; }</Member>
+        <Member type="Method">public void Update(GameTime gameTime)</Member>
+        <Member type="Method">public void Draw(GameTime gameTime, SpriteBatch spriteBatch)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Bullet</Name>
+        <Access>Public</Access>
+        <Location left="913" top="1030" />
+        <Size width="298" height="254" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private float _timer</Member>
+        <Member type="Field">public Explosion Explosion</Member>
+        <Member type="Field">public SoundEffect ShootSound</Member>
+        <Member type="Property">public float LifeSpan { get; set; }</Member>
+        <Member type="Property">public Vector2 Velocity { get; set; }</Member>
+        <Member type="Method">public void OnCollide(Sprite sprite)</Member>
+        <Member type="Method">public void AddExplosion()</Member>
         <Modifier>None</Modifier>
       </Entity>
     </Entities>
@@ -129,17 +195,7 @@
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="2" second="3">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="5" second="3">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="6" second="5">
+      <Relationship type="Generalization" first="3" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
@@ -147,17 +203,59 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="4" second="6">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
       <Relationship type="Generalization" first="8" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="9" second="7">
+      <Relationship type="Association" first="9" second="10">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="4" second="9">
+        <Label>has</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="12" second="11">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="2" second="12">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="5" second="13">
+        <Label>has</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>

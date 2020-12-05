@@ -9,99 +9,104 @@ using System.Text;
 
 namespace Moonshot.Managers
 {
-    public class AnimationManager
+    public class AnimationManager : ICloneable
     {
-        private List<AnimationFrame> _frames = new List<AnimationFrame>();
+        private Animation _animation;
 
-        public AnimationFrame this[int index]
+        private float _timer; // to know when to increment frame
+
+        public Animation CurrentAnimation
         {
             get
             {
-                return GetFrame(index);
+                return _animation;
             }
         }
 
-        public AnimationFrame CurrentFrame
+        public float Layer { get; set; }
+
+        public Vector2 Origin { get; set; }
+
+        public Vector2 Position { get; set; }
+
+        public float Rotation { get; set; }
+
+        public float Scale { get; set; }
+
+        public int FrameHeight { get { return _animation.FrameHeight; } }
+
+        public int FrameWidth {  get { return _animation.FrameWidth; } }
+
+        public AnimationManager(Animation animation)
         {
-            get
-            {
-                return _frames.Where(f => f.TimeStamp <= PlaybackProgress) // query ones where timestamp <= PlaybackProgress
-                    .OrderBy(f => f.TimeStamp) // order by timestamp in ascending order
-                    .LastOrDefault(); // return last one in enumeration, last or default in case no element in collection that matches
-                                      // would return default for target time, which is null
-            }
+            _animation = animation;
+
+            Scale = 1f;
         }
 
-        public float Duration
+        public void Draw(SpriteBatch spriteBatch)
         {
-            get
-            {
-                if (!_frames.Any())
-                    return 0;
-
-                return _frames.Max(f => f.TimeStamp);
-            }
+            spriteBatch.Draw(
+                _animation.Texture,
+                Position,
+                new Rectangle(
+                    _animation.CurrentFrame * FrameWidth, // if CurrentFrame is 0, will look at left side
+                    0,
+                    FrameWidth,
+                    FrameHeight
+                ),
+                Color.White,
+                Rotation,
+                Origin,
+                Scale,
+                SpriteEffects.None,
+                Layer
+                );
         }
 
-        public bool IsPlaying { get; set; }
-        public float PlaybackProgress { get; private set; }
-
-        public bool ShouldLoop { get; set; } = true;
-
-        public void AddFrame(Sprite sprite, float timeStamp)
+        public void Play(Animation animation)
         {
-            AnimationFrame frame = new AnimationFrame(sprite, timeStamp);
+            if (_animation == animation) // check if we are already playing current animation, don't want to reinstantiate values
+                return;
 
-            _frames.Add(frame);
-        }
+            _animation = animation;
 
-        public void Update(GameTime gameTime)
-        {
-            if (IsPlaying)
-            {
-                PlaybackProgress += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _animation.CurrentFrame = 0; // set these to 0 to start at start
 
-                if (PlaybackProgress > Duration)
-                {
-                    if (ShouldLoop)
-                        PlaybackProgress -= Duration;
-                    else
-                        Stop();
-                }
-            }
-        }
-
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
-        {
-            AnimationFrame frame = CurrentFrame;
-
-            if (frame != null)
-                frame.Sprite.Draw(spriteBatch, position);
-        }
-
-        public void Play()
-        {
-            IsPlaying = true;
+            _timer = 0;
         }
 
         public void Stop()
         {
-            IsPlaying = false;
-            PlaybackProgress = 0;
+            _timer = 0f;
+
+            _animation.CurrentFrame = 0;
         }
 
-        public AnimationFrame GetFrame(int index)
+        public void Update(GameTime gameTime)
         {
-            if (index < 0 || index >= _frames.Count)
-                throw new ArgumentOutOfRangeException(nameof(index), "A frame with index " + index + " does not exist in this animation.");
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds; // add to the timer
 
-            return _frames[index];
+            if (_timer > _animation.FrameSpeed) // check if done with the current frame
+            {
+                _timer = 0f;
+
+                _animation.CurrentFrame++;
+
+                if (_animation.CurrentFrame >= _animation.FrameCount) // redo the loop
+                    _animation.CurrentFrame = 0;
+            }
         }
 
-        public void Clear()
+        public object Clone()
         {
-            Stop();
-            _frames.Clear();
+            var animationManager = this.MemberwiseClone() as AnimationManager;
+
+            animationManager._animation = animationManager._animation.Clone() as Animation; // deep clone, rather than shallow method-wise clone
+
+            return animationManager;
         }
+
     }
 }
+

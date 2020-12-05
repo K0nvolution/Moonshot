@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Moonshot.Managers;
 using Moonshot.Sprites;
 using Moonshot.System;
+using System.Collections.Generic;
 
 namespace Moonshot
 {
@@ -12,11 +13,6 @@ namespace Moonshot
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
-        private Texture2D _playerTexture;
-        private Texture2D _bulletTexture;
-
-        private SoundEffect _sfxShoot;
 
         private Player _player;
         private InputController _inputController;
@@ -46,13 +42,30 @@ namespace Moonshot
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _playerTexture = Content.Load<Texture2D>("Player_Ship");
-            _bulletTexture = Content.Load<Texture2D>("Bullet");
-            _sfxShoot = Content.Load<SoundEffect>("Laser_Sound");
+            var playerTexture = Content.Load<Texture2D>("Player_Ship");
+            var bulletTexture = Content.Load<Texture2D>("Bullet");
+            var sfxShoot_player = Content.Load<SoundEffect>("Laser_Sound");
 
-            _player = new Player(_playerTexture, new Vector2(25, Player.PLAYER_DEFAULT_SPRITE_HEIGHT))
+            var bulletPrefab = new Bullet(bulletTexture)
             {
-                ShootSound = _sfxShoot,
+                Explosion = new Explosion(new Dictionary<string, Models.Animation>()
+                {
+                    { "Explode", new Models.Animation(Content.Load<Texture2D>("Explosion"), 3) { FrameSpeed = 0.1f, } }
+                }),
+
+                Layer = 0.5f,
+                ShootSound = sfxShoot_player,
+            };
+
+            _player = new Player(new Dictionary<string, Models.Animation>()
+            {
+                { "In_Place", new Models.Animation(playerTexture, 4) } 
+            })
+                
+            {
+                Position = new Vector2(100, 50),
+                Layer = 0.3f,
+                Bullet = bulletPrefab,
                 Input = new Models.Input()
                 {
                     Up = Keys.W,
@@ -61,6 +74,7 @@ namespace Moonshot
                     Right = Keys.D,
                     Shoot = Keys.Space,
                 },
+                Health = 10,
             };
 
             _entityManager.AddEntity(_player);
@@ -82,7 +96,7 @@ namespace Moonshot
 
             _spriteBatch.Begin();
 
-            _entityManager.Draw(_spriteBatch, gameTime);
+            _entityManager.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.End();
 
